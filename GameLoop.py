@@ -1,15 +1,16 @@
 import time
+import math
 
 #This is our wiggle room. The lower we set it the more accurate our simulation is
 #but the longer it takes simulation time to "catch up" to the real world. It can't
 #be lower than how long it takes to complete the update or we'll never finish. The
 #longer it is the more extrapolation our renderer is forced to do and the crappier
 #it appears.
-MS_PER_UPDATE = 16
+MS_PER_UPDATE = 15
 
 #we'll simulate the real-world time the CPU takes to handle our program
 #during its update and render phases with sleep() and these vars
-render_cost_s=0.011
+render_cost_s=0.005
 update_cost_s=0.010
 
 lag_ms = 0.0 #how far behind our program is from what's rendered
@@ -38,13 +39,16 @@ def update():
     global updates, the_value
     the_value += increment
     updates += 1
-    time.sleep(update_cost_s)
+    time_consuming_action(update_cost_s)
     return
-def render():
-    print(str(the_value))
+def render(fraction):
+    print(str(the_value+increment*fraction))
     global renders
     renders += 1
-    time.sleep(render_cost_s)
+    time_consuming_action(render_cost_s)
+    return
+def time_consuming_action(value):
+    #time.sleep(value)#comment here to see our program's "benchmark"
     return
 
 #Thar she is. S'beautiful!
@@ -58,7 +62,7 @@ while (the_value<goal_value):
     while (lag_ms >= MS_PER_UPDATE):
         update()
         lag_ms -= MS_PER_UPDATE
-    render()
+    render(lag_ms / MS_PER_UPDATE)
 
 total_time_elapsed = (get_current_time() - first)
-print("Completed (" + str(updates) + ") updates and (" + str(renders) + ") renders in (" + str(total_time_elapsed) + ")")
+print("Completed (" + str(updates) + ") updates and (" + str(renders) + ") renders in (" + str(total_time_elapsed) + ") for an AVG framerate of " + str(math.ceil(renders/(total_time_elapsed.seconds+total_time_elapsed.microseconds/1e6))))
