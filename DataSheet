@@ -1,0 +1,7 @@
+Approximate power requirements:
+DC continuous motor 95 - 500 mAh @ 12V
+Servos for legs (4 @ <500mAh) <2000mAh
+Servos for face (6 @ <500mAh) <3000mAh
+Smoke Generator 120 mAh
+RGBW LEDs (3 @ 700 mAh/channel) <8400mAh
+RPI (&peripherals) >2000mAh
